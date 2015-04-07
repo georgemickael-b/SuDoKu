@@ -1,0 +1,276 @@
+<html>
+	<head>
+		<script src="jquery-2.1.3.min.js"></script>
+		<script src="bootstrap.min.js"></script>
+		<script src="FileSaver.min.js"></script>
+		<script src="bootstrap-dialog.js"></script>
+		<link rel="stylesheet" type="text/css" href="bootstrap.min.css"></link>
+		<link rel="stylesheet" type="text/css" href="bootstrap-dialog.css"></link>
+		<style>
+			.cellHoverStyle{
+				border:1px solid #0066FF;
+			}
+			.cellTypeStyle{
+				border:1px solid #00CC00;
+			}
+			#board .row_board .cell{
+				border:1px solid #b3b3b3;
+				border-collapse:collapse;
+			}
+			#board .row_board .cell a{
+				display:block;
+				height:100%;
+				width:100%;
+				margin:0px;
+				text-align:center;
+				text-decoration:none;
+				 color: #006699;
+				font-size: 32px;
+				
+			}
+			#gamePage{
+				display:none;
+				}
+			.differ{
+				background-color:#FFFFCC;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="wrapper" class="container">
+			<div class="row">
+					<h1 class="text-center">SuDoKu</h2>
+			</div>
+			<div id="homePage" class="col-md-12" >
+				<div class="col-md-4"></div>
+				<div  class="col-md-4" style="padding:40px;border:1px solid #e3e3e3;border-radius:0.25em;">
+					<button id="New_Game" class="form-control btn btn-success">New Game</button><br><br>
+					<button id="Load_Game_Button" class="form-control btn btn-success">Load Game</button>
+					<input id="Load_Game" type="file" class="form-control" style="display:none;"></input>
+				</div>
+			</div>
+			
+			
+			<div id="gamePage" class="col-md-12">
+				<center>
+				<table id="board">
+					<tr class="row_board"><td class="cell"><a href="#"></a></td><td class="cell"><a href="#"></a></td><td class="cell"><a href="#"></a></td><td class="cell"><a href="#"></a></td><td class="cell"><a href="#"></a></td><td class="cell"><a href="#"></a></td><td class="cell"><a href="#"></a></td><td class="cell"><a href="#"></a></td><td class="cell"><a href="#"></a></td></tr>
+					<tr class="row_board"><td class="cell"><a href="#"></a></td><td class="cell"><a href="#"></a></td><td class="cell"><a href="#"></a></td><td class="cell"><a href="#"></a></td><td class="cell"><a href="#"></a></td><td class="cell"><a href="#"></a></td><td class="cell"><a href="#"></a></td><td class="cell"><a href="#"></a></td><td class="cell"><a href="#"></a></td></tr>
+					<tr class="row_board"><td class="cell"><a href="#"></a></td><td class="cell"><a href="#"></a></td><td class="cell"><a href="#"></a></td><td class="cell"><a href="#"></a></td><td class="cell"><a href="#"></a></td><td class="cell"><a href="#"></a></td><td class="cell"><a href="#"></a></td><td class="cell"><a href="#"></a></td><td class="cell"><a href="#"></a></td></tr>
+					<tr class="row_board"><td class="cell"><a href="#"></a></td><td class="cell"><a href="#"></a></td><td class="cell"><a href="#"></a></td><td class="cell"><a href="#"></a></td><td class="cell"><a href="#"></a></td><td class="cell"><a href="#"></a></td><td class="cell"><a href="#"></a></td><td class="cell"><a href="#"></a></td><td class="cell"><a href="#"></a></td></tr>
+					<tr class="row_board"><td class="cell"><a href="#"></a></td><td class="cell"><a href="#"></a></td><td class="cell"><a href="#"></a></td><td class="cell"><a href="#"></a></td><td class="cell"><a href="#"></a></td><td class="cell"><a href="#"></a></td><td class="cell"><a href="#"></a></td><td class="cell"><a href="#"></a></td><td class="cell"><a href="#"></a></td></tr>
+					<tr class="row_board"><td class="cell"><a href="#"></a></td><td class="cell"><a href="#"></a></td><td class="cell"><a href="#"></a></td><td class="cell"><a href="#"></a></td><td class="cell"><a href="#"></a></td><td class="cell"><a href="#"></a></td><td class="cell"><a href="#"></a></td><td class="cell"><a href="#"></a></td><td class="cell"><a href="#"></a></td></tr>
+					<tr class="row_board"><td class="cell"><a href="#"></a></td><td class="cell"><a href="#"></a></td><td class="cell"><a href="#"></a></td><td class="cell"><a href="#"></a></td><td class="cell"><a href="#"></a></td><td class="cell"><a href="#"></a></td><td class="cell"><a href="#"></a></td><td class="cell"><a href="#"></a></td><td class="cell"><a href="#"></a></td></tr>
+					<tr class="row_board"><td class="cell"><a href="#"></a></td><td class="cell"><a href="#"></a></td><td class="cell"><a href="#"></a></td><td class="cell"><a href="#"></a></td><td class="cell"><a href="#"></a></td><td class="cell"><a href="#"></a></td><td class="cell"><a href="#"></a></td><td class="cell"><a href="#"></a></td><td class="cell"><a href="#"></a></td></tr>
+					<tr class="row_board"><td class="cell"><a href="#"></a></td><td class="cell"><a href="#"></a></td><td class="cell"><a href="#"></a></td><td class="cell"><a href="#"></a></td><td class="cell"><a href="#"></a></td><td class="cell"><a href="#"></a></td><td class="cell"><a href="#"></a></td><td class="cell"><a href="#"></a></td><td class="cell"><a href="#"></a></td></tr>
+				</table>
+				</center>
+				<br>
+				<div class="col-md-4"></div>
+				<div class="col-md-4">
+					<button id="Back" class="col-md-6 btn btn-success">Back</button>
+					<button id="Save" class="col-md-6 btn btn-success">Save</button>
+				</div>
+			</div>
+			
+		</div>
+		<script>
+			$(function(){
+				var sudokuValues=[];
+				var sudokuTemplate;
+				
+				$.get( "/New_Game", function( data ){
+							sudokuTemplate=data;
+							//gameInit(data);	
+					});
+				
+				$("#Load_Game_Button").mouseover(function(){
+					$(this).toggle();
+					$("#Load_Game").toggle();
+				});
+				$("#Load_Game").mouseout(function(){
+					$(this).toggle();
+					$("#Load_Game_Button").toggle();
+				});
+				$("#Load_Game").change(function(evt){
+					var file= evt.target.files[0];
+					var reader = new FileReader();
+					reader.onload = function(e) {
+					  var gameJSON = reader.result;
+					  console.log(gameJSON);
+					  gameInit(gameJSON,sudokuTemplate);
+					}
+					reader.readAsText(file,'utf-8');
+					evt.target.files=[];
+				});
+				
+				
+				function gameInit(data,template)
+				{
+					sudokuValues=$.parseJSON(data).values;
+					var sudokuTemplate=[];
+					if(template!=null)
+						sudokuTemplate=$.parseJSON(template).values;
+					console.log(sudokuValues);
+							
+					$("#board .row_board .cell a").text("");
+					for(var i=0,j=1,k=1;i<sudokuValues.length;i++,j++){
+						if(j>9){
+							j=1;
+							k++;
+						}
+						if(sudokuValues[i]==0||sudokuTemplate[i]==0){
+							var cell=$("#board tr:nth-child("+k+") td:nth-child("+j+") a");
+							cell.attr({"disabled":"true"});
+							cell.hover(hoverIn,hoverOut);
+							cell.click(clickCell);
+							cell.css({"color":"#FF9900"});
+						}
+						if(sudokuValues[i]!=0){
+							var cell=$("#board tr:nth-child("+k+") td:nth-child("+j+") a");
+							cell.text(sudokuValues[i]);
+						}
+					}
+							
+					$("#homePage").slideToggle();
+					$("#gamePage").slideToggle();
+				}
+				
+				$("#New_Game").click(function(){
+					gameInit(sudokuTemplate,null);
+				});
+				
+				$("#Back").click(function(){
+					$("#homePage").slideToggle();
+					$("#gamePage").slideToggle();
+				});
+				
+				$("#Save").click(function(){
+					var values=[];
+					$("#board .row_board .cell a").each(function(){
+						var num;
+						if($(this).text()=="")
+							num=0;
+						else
+							num=Number($(this).text());
+						values.push(num);
+					})
+					var json={values:values};
+					var jsonToSave=JSON.stringify(json);
+					var blob = new Blob([jsonToSave], {type: "text/plain;charset=utf-8"});
+						saveAs(blob,"SuDoKu.json");	
+				});
+				
+				var currentCell=undefined;
+				$("#board .row_board .cell").css({display:"inline-block",width:400/9,height:400/9});
+				
+				$.each([1,2,3,7,8,9], function(index1,i) {
+					$.each([4,5,6],function(index2,j) {
+						$("#board tr:nth-child("+i+") td:nth-child("+j+")").addClass("differ");
+						$("#board tr:nth-child("+j+") td:nth-child("+i+")").addClass("differ");
+					});
+				});
+				
+				
+				function hoverIn(){
+					$(this).addClass("cellHoverStyle");
+				}
+				function hoverOut(){
+					$(this).removeClass("cellHoverStyle");
+				}
+				function clickCell(){
+					if(currentCell!=undefined)
+						currentCell.removeClass("cellTypeStyle");
+					currentCell=$(this);
+					$(this).addClass("cellTypeStyle");
+				}
+				function checkIfAnswer()
+				{
+					var answer=[];
+					var cont=true;
+					$("#board .row_board .cell a").each(function(){
+						if($(this).text()=="")
+						{
+							cont=false;
+							return false;
+						}
+						else
+						{
+							answer.push(Number($(this).text()));
+						}
+					});
+					if(cont==true)
+					{
+						var len=answer.length;
+						console.log("Horizontal");
+						for(var i=0;i<len;i+=9)
+						{
+							var row=answer.slice(i,i+9);
+							var unique=row.filter(function(itm,i,row){
+								return i==row.indexOf(itm);
+							});
+							console.log(row);
+							if(unique.length!=9)
+							return false;
+						}
+						
+						
+						console.log("Vertical");
+						for(var i=0;i<9;i++)
+						{ 
+							row=[];
+							for(var j=i;j<81;j+=9)
+								row.push(answer[j]);
+							var unique=row.filter(function(itm,i,row){
+								return i==row.indexOf(itm);
+							});
+							console.log(row);
+							if(unique.length!=9)
+							return false;
+						}
+						
+						console.log("Box");
+						
+						$.each([0,3,6,27,30,33,54,57,60],function(id,v)
+						{
+							var box=[];
+							for(var i=0,b=v;i<3;b+=9,i++)
+							{	
+									$.each(answer.slice(b,b+3),function(idx,val){
+									box.push(val);
+									});	
+							}
+							console.log(box);
+							var unique=box.filter(function(itm,k,row){
+										return k==row.indexOf(itm);
+									});	
+							if(unique.length!=9)
+								return false;	
+						});
+						return true;
+					}
+				}
+				$("body").keyup(function(e){
+					if(currentCell!=undefined){
+						var isCorrect=false;
+						if(e.keyCode>48 && e.keyCode<=57)
+						{
+								currentCell.text(String.fromCharCode(e.which));
+								isCorrect=checkIfAnswer();
+						}
+						else if(e.keyCode>96 && e.keyCode<=105)
+						{
+								currentCell.text(String.fromCharCode(e.which-48));
+								isCorrect=checkIfAnswer();
+						}	
+						if(isCorrect)
+							BootstrapDialog.show({
+								title:'Perfect!',
+								message: '<h2>That was absolutely correct! Congratz!</h2>'
+							});
+					}
+				});
+			});
+		</script>
+	</body>
+</html>
