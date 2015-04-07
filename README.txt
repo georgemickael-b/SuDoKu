@@ -1,3 +1,6 @@
+You can see it Live <a href="http://gma-sudoku.herokuapp.com">here</a>
+
+Note: Only one Game State is defined. You can add many game states by creating JSON file. See game.json for the format.
 
 Prerequiste
 ************
